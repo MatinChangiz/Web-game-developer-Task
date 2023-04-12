@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Drag Drop Task</title>
+    <style>
+        #drgbldiv
+        {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color:green;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            -ms-user-select: none;
+            -khtml-user-select: none;
+            user-select: none;
+            cursor: default;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <!-- Draggable DIV -->
+    <div style="width: 80vw; height: 80vw; background-color: #EFEFEF;" id='parent'>
+        <div id='drgbldiv' onmousedown='tzdragg.startMoving(event);' onmouseup='tzdragg.stopMoving();'>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    function $(el){
+        return document.getElementById(el);
+    }
+    var tzdragg = function(){
+        return {
+            move : function(divid,xpos,ypos){
+                var a = $(divid);
+                $(divid).style.left = xpos + 'px';
+                $(divid).style.top = ypos + 'px';
+            },
+            startMoving : function(evt){
+
+                evt = evt || window.event;
+                var posX = evt.clientX,
+                    posY = evt.clientY,
+                    a = $('drgbldiv'),
+                divTop = a.style.top,
+                divLeft = a.style.left;
+                
+                divTop = divTop.replace('px','');
+                divLeft = divLeft.replace('px','');
+                var diffX = posX - divLeft,
+                    diffY = posY - divTop;
+                document.onmousemove = function(evt){
+                    evt = evt || window.event;
+                    var posX = evt.clientX,
+                        posY = evt.clientY,
+                        aX = posX - diffX,
+                        aY = posY - diffY;
+                    var boun=document.getElementById("parent").offsetWidth-document.getElementById("drgbldiv").offsetWidth;
+                
+                    if((aX>0)&&(aX<boun)&&(aY>0)&&(aY<boun))
+                    tzdragg.move('drgbldiv',aX,aY);
+                }
+            },
+            stopMoving : function(){
+                var a = document.createElement('script');
+                document.onmousemove = function(){}
+            },
+        }
+    }();
+</script>
